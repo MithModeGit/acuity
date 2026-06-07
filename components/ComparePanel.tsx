@@ -36,7 +36,7 @@ function StatusDot({ color }: { color: string }) {
  */
 export function ComparePanel({ sections, tavilyResults, tavilyAnswer, isLoading }: ComparePanelProps) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '60fr 40fr', gap: 16, alignItems: 'start' }}>
+    <div className="compare-grid">
       {/* ── Exa panel ──────────────────────────────────────────────── */}
       <section
         style={{

@@ -66,10 +66,25 @@ function extractSectionCitations(text: string): { clean: string; citations: Cita
     });
   }
 
-  // Remove the markdown link tokens and tidy the leftover whitespace so the
-  // displayed prose is clean. The citations live in the chips instead.
-  const clean = text
-    .replace(MARKDOWN_LINK, '')
+  // Replace each markdown link, deciding per-link whether it is a trailing
+  // citation marker or genuine inline prose. Exa typically appends citations
+  // after a finished clause (e.g. `...in May 2025. [CNBC](url) The company...`),
+  // where dropping the anchor text entirely reads cleanly. But if a link sits
+  // mid-sentence (e.g. `acquired [Bridge](url) for $1.1B`), removing the anchor
+  // text would break grammar, so we keep it. The decision uses the character
+  // immediately preceding the link (skipping one leading space): a word
+  // character means inline prose (preserve), anything else means a trailing
+  // citation (remove). The lookup is against the ORIGINAL string so runs of
+  // consecutive citations are each judged correctly.
+  const linkWithLead = /(\s*)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const stripped = text.replace(linkWithLead, (_full, lead: string, label: string, _url, offset: number, str: string) => {
+    const prevChar = offset > 0 ? str[offset - 1] : '';
+    const isInline = /[A-Za-z0-9]/.test(prevChar);
+    return isInline ? `${lead}${label}` : '';
+  });
+
+  // Tidy the leftover whitespace so the prose renders cleanly.
+  const clean = stripped
     .replace(/\p{Zs}/gu, ' ') // normalize non-breaking / thin spaces
     .replace(/\(\s*\)/g, '') // drop now-empty parens, e.g. "( )"
     .replace(/[ \t]{2,}/g, ' ')

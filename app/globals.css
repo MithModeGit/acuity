@@ -263,6 +263,20 @@ a {
   color: var(--accent);
 }
 
+/* Compare panel grid — 60/40 split that stacks vertically on narrow screens. */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Custom scrollbar for compare columns */
 .scroll-column {
   overflow-y: auto;
