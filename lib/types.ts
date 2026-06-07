@@ -75,10 +75,65 @@ export interface TavilyResult {
   published_date?: string;
 }
 
-/** Response shape from POST /api/compare. */
+/** One row of the Exa-vs-Tavily scorecard, anchored on the real Stripe runs. */
+export interface ScorecardRow {
+  key: string;
+  label: string;
+  /** 1-5, derived from evidence (not assumed). */
+  exa_rating: number;
+  tavily_rating: number;
+  /** "Exa edge" | "Parity" | "Tavily edge". */
+  verdict: string;
+  summary: string;
+  exa_evidence: string;
+  tavily_evidence: string;
+}
+
+/** A single comparable-company card for the Act 3 comp set. */
+export interface ComparableCard {
+  company: string;
+  founder: string;
+  valuation: string;
+  description: string;
+  /** e.g. "Public · NASDAQ:PYPL" or "Private". */
+  kind: string;
+  url?: string;
+}
+
+/**
+ * The full seeded comparison for Stripe: Tavily's own structured brief, the
+ * evidence-anchored scorecard, and both engines' comparable-company sets.
+ * Generated from real Exa + Tavily runs (see docs/COMPARISON_ANALYSIS.md).
+ */
+export interface ComparisonData {
+  company: string;
+  exa: { research_seconds: number; source_count: number };
+  tavily: {
+    research_seconds: number;
+    source_count: number;
+    sections: ResearchSections;
+    sources: Citation[];
+  };
+  scorecard: ScorecardRow[];
+  comparables: {
+    exa_seconds: number;
+    tavily_seconds: number;
+    tavily_returned: number;
+    exa: ComparableCard[];
+    tavily: ComparableCard[];
+  };
+}
+
+/**
+ * Response shape from POST /api/compare.
+ * - Seeded companies (Stripe) return the rich `comparison` (scorecard + briefs
+ *   + comparables).
+ * - Non-seeded companies return live Tavily `results` (+ optional `answer`).
+ */
 export interface CompareResult {
-  results: TavilyResult[];
+  results?: TavilyResult[];
   answer?: string;
+  comparison?: ComparisonData;
 }
 
 /** Metadata that drives section rendering order and labels across the app. */
