@@ -2,6 +2,7 @@ import type { ComparisonData } from '@/lib/types';
 
 interface ComparablesPanelProps {
   comparables: ComparisonData['comparables'];
+  companyName: string;
 }
 
 function Card({
@@ -50,7 +51,7 @@ function Card({
  * same, runs a multi-minute research synthesis and drifts to smaller peers. The
  * win is retrieval, speed, and relevance — not "Tavily can't."
  */
-export function ComparablesPanel({ comparables }: ComparablesPanelProps) {
+export function ComparablesPanel({ comparables, companyName }: ComparablesPanelProps) {
   const speedup = Math.round(comparables.tavily_seconds / Math.max(comparables.exa_seconds, 1));
 
   return (
@@ -60,10 +61,9 @@ export function ComparablesPanel({ comparables }: ComparablesPanelProps) {
           Beyond synthesis: structured discovery
         </h3>
         <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5, color: 'var(--text-secondary)' }}>
-          On the brief, the two engines are close. This is where they aren&apos;t. Asked for Stripe&apos;s
-          closest comparables with founders and valuations, Exa&apos;s company index returned a verified,
-          structured set in <strong style={{ color: 'var(--text-primary)' }}>~{comparables.exa_seconds}s</strong> —
-          a different capability class from text synthesis.
+          When asked for {companyName}&apos;s closest comparables with founders and valuations,
+          Exa&apos;s company index returned a robust, verified, structured set in{' '}
+          <strong style={{ color: 'var(--text-primary)' }}>~{comparables.exa_seconds}s</strong>.
         </p>
       </div>
 
@@ -94,10 +94,10 @@ export function ComparablesPanel({ comparables }: ComparablesPanelProps) {
           </span>
         </div>
         <p style={{ margin: '0 0 10px', fontSize: 12.5, lineHeight: 1.5, color: 'var(--text-secondary)' }}>
-          Tavily produced a real structured set too (via Research + schema) — but it took{' '}
+          Tavily produced a real structured set too (via Research + schema), but it took{' '}
           <strong style={{ color: 'var(--text-primary)' }}>~{speedup}× longer</strong>, returned only{' '}
           {comparables.tavily_returned}, and drifted to much smaller peers (Marqeta ~$1.6B, Payoneer ~$1.7B)
-          rather than Stripe-scale processors.
+          rather than {companyName}-scale processors.
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {comparables.tavily.map((c) => (

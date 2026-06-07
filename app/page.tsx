@@ -335,11 +335,10 @@ export default function Home() {
                 <div style={{ marginTop: 20 }}>
                   <BriefComparison
                     exaSections={sections}
-                    exaCitations={citations}
                     exaSeconds={comparison.exa.research_seconds}
                     exaSources={comparison.exa.source_count}
                     tavilySections={comparison.tavily.sections}
-                    tavilySources={comparison.tavily.sources}
+                    tavilySources={comparison.tavily.source_count}
                     tavilySeconds={comparison.tavily.research_seconds}
                   />
                 </div>
@@ -353,7 +352,7 @@ export default function Home() {
                   </div>
                 ) : (
                   <div style={{ marginTop: 28 }}>
-                    <ComparablesPanel comparables={comparison.comparables} />
+                    <ComparablesPanel comparables={comparison.comparables} companyName={comparison.company} />
                   </div>
                 )}
               </>
