@@ -1,0 +1,211 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getExa, RESEARCH_OUTPUT_SCHEMA, buildInstructions } from '@/lib/exa';
+import type {
+  ResearchContext,
+  ResearchResult,
+  ResearchSections,
+  SectionCitations,
+  Citation,
+  SeedFile,
+} from '@/lib/types';
+import { SECTION_META } from '@/lib/types';
+import { hostname } from '@/lib/utils';
+import stripeSeed from '@/data/stripe_seed.json';
+
+// The live Exa research call is long-running; allow up to 5 minutes.
+export const runtime = 'nodejs';
+export const maxDuration = 300;
+
+// Companies served from pre-seeded data instead of a live API call.
+const SEEDED = ['stripe'];
+
+function isSeeded(name: string): boolean {
+  return SEEDED.includes(name.toLowerCase().trim());
+}
+
+const seed = stripeSeed as unknown as SeedFile;
+
+/** Validate that an unknown value has all six required section strings. */
+function isResearchSections(value: unknown): value is ResearchSections {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return SECTION_META.every((s) => typeof v[s.key] === 'string' && (v[s.key] as string).length > 0);
+}
+
+// Matches inline markdown citations Exa embeds in the prose, e.g.
+// "[Rippling product pages](https://www.rippling.com/products)".
+const MARKDOWN_LINK = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+
+/**
+ * Live Exa research embeds its citations as inline markdown links inside each
+ * section's text. We pull those out as that section's citations (far more
+ * relevant than scraping every URL from the events log) and strip the markdown
+ * so the prose renders cleanly. Returns the cleaned text plus its citations.
+ */
+function extractSectionCitations(text: string): { clean: string; citations: Citation[] } {
+  const citations: Citation[] = [];
+  const seen = new Set<string>();
+
+  for (const match of text.matchAll(MARKDOWN_LINK)) {
+    const label = match[1].trim();
+    const url = match[2];
+    if (seen.has(url)) continue;
+    seen.add(url);
+    const host = hostname(url);
+    citations.push({
+      // Prefer a concise descriptive label; fall back to the hostname.
+      source_name: label.length > 0 && label.length <= 48 ? label : host,
+      url,
+    });
+  }
+
+  // Replace each markdown link, deciding per-link whether it is a trailing
+  // citation marker or genuine inline prose. Exa typically appends citations
+  // after a finished clause (e.g. `...in May 2025. [CNBC](url) The company...`),
+  // where dropping the anchor text entirely reads cleanly. But if a link sits
+  // mid-sentence (e.g. `acquired [Bridge](url) for $1.1B`), removing the anchor
+  // text would break grammar, so we keep it. The decision uses the character
+  // immediately preceding the link (skipping one leading space): a word
+  // character means inline prose (preserve), anything else means a trailing
+  // citation (remove). The lookup is against the ORIGINAL string so runs of
+  // consecutive citations are each judged correctly.
+  // Lead is restricted to horizontal whitespace ([ \t], not \s) so a link at
+  // the start of a line never swallows the preceding newline / paragraph break.
+  const linkWithLead = /([ \t]*)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const stripped = text.replace(
+    linkWithLead,
+    (_full, lead: string, label: string, _url: string, offset: number, str: string) => {
+      const prevChar = offset > 0 ? str[offset - 1] : '';
+      // Only treat the link as a removable trailing citation when it follows
+      // sentence-ending punctuation or a previous citation's `)` / `]`.
+      // Otherwise it is inline prose, so keep its anchor text — this also keeps
+      // consecutive inline citations (e.g. "[Bridge](u1), [Stripe](u2)") intact.
+      const isTrailingCitation = /[.!?;)\]]/.test(prevChar);
+      return isTrailingCitation ? '' : `${lead}${label}`;
+    },
+  );
+
+  // Tidy the leftover whitespace so the prose renders cleanly.
+  const clean = stripped
+    .replace(/\p{Zs}/gu, ' ') // normalize non-breaking / thin spaces
+    .replace(/\(\s*\)/g, '') // drop now-empty parens, e.g. "( )"
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/[ \t]+([.,;:!?)])/g, '$1') // no space before punctuation
+    .replace(/([(])[ \t]+/g, '$1') // no space after opening paren
+    .replace(/[ \t]+\n/g, '\n') // no trailing space before newline
+    .replace(/\n[ \t]+/g, '\n') // no leading space after newline
+    .trim();
+
+  return { clean, citations };
+}
+
+/**
+ * Build cleaned sections + per-section citations from the raw Exa output by
+ * extracting the inline markdown citations Exa placed in each section.
+ */
+function processLiveSections(raw: ResearchSections): {
+  sections: ResearchSections;
+  citations: SectionCitations;
+} {
+  const sections = { ...raw };
+  const citations: SectionCitations = {};
+  for (const meta of SECTION_META) {
+    const { clean, citations: found } = extractSectionCitations(raw[meta.key]);
+    sections[meta.key] = clean;
+    if (found.length > 0) citations[meta.key] = found;
+  }
+  return { sections, citations };
+}
+
+const VALID_CONTEXTS = new Set<ResearchContext>([
+  'investment_banking',
+  'private_equity',
+  'hedge_fund',
+  'management_consulting',
+]);
+
+function toContext(value: unknown): ResearchContext {
+  return typeof value === 'string' && VALID_CONTEXTS.has(value as ResearchContext)
+    ? (value as ResearchContext)
+    : 'investment_banking';
+}
+
+export async function POST(request: NextRequest) {
+  let body: { companyName?: unknown; context?: unknown } | null = null;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
+  }
+
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
+  }
+
+  const { companyName, context } = body;
+
+  if (typeof companyName !== 'string' || !companyName.trim()) {
+    return NextResponse.json({ error: 'Company name is required.' }, { status: 400 });
+  }
+
+  // ── Seeded demo path: instant, deterministic, no API call ──────────────
+  if (isSeeded(companyName)) {
+    const result: ResearchResult = {
+      sections: seed.sections,
+      citations: seed.citations ?? {},
+      research_seconds: seed.research_seconds,
+    };
+    return NextResponse.json(result);
+  }
+
+  // ── Live Exa Deep Research path ────────────────────────────────────────
+  try {
+    const exa = getExa();
+    const instructions = buildInstructions(companyName.trim(), toContext(context));
+    const startedAt = Date.now();
+
+    const created = await exa.research.create({
+      instructions,
+      model: 'exa-research',
+      outputSchema: RESEARCH_OUTPUT_SCHEMA as unknown as Record<string, unknown>,
+    });
+
+    const research = await exa.research.pollUntilFinished(created.researchId, {
+      pollInterval: 2000,
+      timeoutMs: 280000,
+    });
+
+    if (research.status !== 'completed') {
+      console.error('Exa research did not complete:', research.status);
+      return NextResponse.json(
+        { error: 'Research could not be completed. Please try again.' },
+        { status: 500 },
+      );
+    }
+
+    const parsed = research.output?.parsed;
+    if (!isResearchSections(parsed)) {
+      console.error('Exa research output did not match the expected schema.');
+      return NextResponse.json(
+        { error: 'Research returned an unexpected format. Please try again.' },
+        { status: 500 },
+      );
+    }
+
+    const { sections, citations } = processLiveSections(parsed);
+    const result: ResearchResult = {
+      sections,
+      citations,
+      research_seconds: Math.round((Date.now() - startedAt) / 1000),
+    };
+    return NextResponse.json(result);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Exa research error:', error.message);
+    }
+    return NextResponse.json(
+      { error: 'Research could not be completed. Please try again.' },
+      { status: 500 },
+    );
+  }
+}
