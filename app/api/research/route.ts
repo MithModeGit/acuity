@@ -76,7 +76,9 @@ function extractSectionCitations(text: string): { clean: string; citations: Cita
   // character means inline prose (preserve), anything else means a trailing
   // citation (remove). The lookup is against the ORIGINAL string so runs of
   // consecutive citations are each judged correctly.
-  const linkWithLead = /(\s*)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  // Lead is restricted to horizontal whitespace ([ \t], not \s) so a link at
+  // the start of a line never swallows the preceding newline / paragraph break.
+  const linkWithLead = /([ \t]*)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
   const stripped = text.replace(linkWithLead, (_full, lead: string, label: string, _url, offset: number, str: string) => {
     const prevChar = offset > 0 ? str[offset - 1] : '';
     const isInline = /[A-Za-z0-9]/.test(prevChar);
@@ -90,7 +92,8 @@ function extractSectionCitations(text: string): { clean: string; citations: Cita
     .replace(/[ \t]{2,}/g, ' ')
     .replace(/[ \t]+([.,;:!?)])/g, '$1') // no space before punctuation
     .replace(/([(])[ \t]+/g, '$1') // no space after opening paren
-    .replace(/[ \t]+\n/g, '\n')
+    .replace(/[ \t]+\n/g, '\n') // no trailing space before newline
+    .replace(/\n[ \t]+/g, '\n') // no leading space after newline
     .trim();
 
   return { clean, citations };
