@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tavilySearch } from '@/lib/tavily';
-import type { CompareResult } from '@/lib/types';
+import type { CompareResult, ComparisonData } from '@/lib/types';
+import comparisonSeed from '@/data/comparison_stripe_seed.json';
 
 export const runtime = 'nodejs';
+
+// Companies with a pre-computed rich comparison (real Exa + Tavily runs).
+const SEEDED = ['stripe'];
+
+function isSeeded(name: string): boolean {
+  return SEEDED.includes(name.toLowerCase().trim());
+}
 
 export async function POST(request: NextRequest) {
   let body: { companyName?: unknown } | null = null;
@@ -22,6 +30,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Company name is required.' }, { status: 400 });
   }
 
+  // ── Seeded rich comparison (scorecard + briefs + comparables) ──────────
+  if (isSeeded(companyName)) {
+    const result: CompareResult = { comparison: comparisonSeed as unknown as ComparisonData };
+    return NextResponse.json(result);
+  }
+
+  // ── Live Tavily search (non-seeded fallback) ───────────────────────────
   try {
     const data = await tavilySearch(companyName.trim());
     const result: CompareResult = {

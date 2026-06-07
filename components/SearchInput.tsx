@@ -16,7 +16,7 @@ export function SearchInput({ value, onChange, disabled }: SearchInputProps) {
       className="input"
       type="text"
       value={value}
-      placeholder="Enter a company name — e.g. Stripe"
+      placeholder="Enter a company name"
       disabled={disabled}
       autoComplete="off"
       spellCheck={false}
