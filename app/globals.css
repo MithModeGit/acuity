@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ════════════════════════════════════════════════════════════════════════
+   Acuity Design Tokens
+   The :root block below is the canonical token set from docs/DESIGN_SYSTEM.md,
+   reproduced exactly. Acuity-specific additions (font vars, the section-reveal
+   keyframe, accent-subtle usage) are documented in DESIGN_SYSTEM.md.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Fonts (mapped from @fontsource imports in layout.tsx) ─────────── */
+  --font-sans: 'Geist Variable', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+
+  /* ── Backgrounds ─────────────────────────────────── */
+  --bg-page: #F7F7F8;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #FAFAFA;
+  --bg-sidebar: #111111;
+  --bg-sidebar-hover: #1A1A1A;
+  --bg-sidebar-active: #242424;
+
+  /* ── Borders ─────────────────────────────────────── */
+  --border-subtle: #E4E4E7;
+  --border-default: #D4D4D8;
+  --border-strong: #A1A1AA;
+
+  /* ── Text ────────────────────────────────────────── */
+  --text-primary: #18181B;
+  --text-secondary: #52525B;
+  --text-muted: #A1A1AA;
+  --text-disabled: #D4D4D8;
+  --text-on-dark: #F4F4F5;
+  --text-on-dark-muted: #A1A1AA;
+
+  /* ── Accent (deep navy — not Tailwind blue) ──────── */
+  --accent: #1C3461;
+  --accent-hover: #162A52;
+  --accent-fg: #FFFFFF;
+  --accent-subtle: #EEF2FF;
+
+  /* ── Pipeline stage colors ───────────────────────── */
+  --stage-target: #6B7280;
+  --stage-contacted: #2563EB;
+  --stage-call: #7C3AED;
+  --stage-demo: #DB2777;
+  --stage-proposal: #D97706;
+  --stage-won: #16A34A;
+  --stage-lost: #EF4444;
+
+  /* ── Archetype badge colors ──────────────────────── */
+  --archetype-finance: #0369A1;
+  --archetype-sales: #7C3AED;
+  --archetype-research: #D97706;
+  --archetype-compliance: #0F766E;
+  --archetype-content: #BE185D;
+
+  /* ── Signal type colors ──────────────────────────── */
+  --signal-competitive: #DC2626;
+  --signal-funding: #16A34A;
+  --signal-hiring: #2563EB;
+  --signal-product: #7C3AED;
+  --signal-technology: #6B7280;
+
+  /* ── Shadows and radius ──────────────────────────── */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.08);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Base
+   ════════════════════════════════════════════════════════════════════════ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Animations
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Skeleton loading pulse (from DESIGN_SYSTEM.md) */
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading-skeleton {
+  animation: pulse-subtle 1.5s ease-in-out infinite;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+/* Section reveal — Acuity-specific. Each section card fades and rises into
+   place when it becomes visible during the staggered reveal. */
+@keyframes section-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-reveal {
+  animation: section-reveal 0.4s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal,
+  .loading-skeleton {
+    animation: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Component primitives
+   Colors always come from var(--token); never raw Tailwind color utilities.
+   ════════════════════════════════════════════════════════════════════════ */
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* Primary button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  height: 38px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn-primary:disabled {
+  background: var(--text-disabled);
+  border-color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* Secondary button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  height: 38px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background: var(--bg-surface-hover);
+}
+
+.btn-secondary:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* Text input */
+.input {
+  width: 100%;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: var(--font-sans);
+  padding: 0 16px;
+  height: 48px;
+  transition: border-color 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.input:disabled {
+  background: var(--bg-surface-hover);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Citation chip */
+.citation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.citation-chip:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-surface-hover);
+}
+
+/* Custom scrollbar for compare columns */
+.scroll-column {
+  overflow-y: auto;
+}
+
+.scroll-column::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-column::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+.scroll-column::-webkit-scrollbar-track {
+  background: transparent;
+}
