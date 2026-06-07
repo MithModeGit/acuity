@@ -1,4 +1,4 @@
-import type { ResearchSections, Citation } from '@/lib/types';
+import type { ResearchSections } from '@/lib/types';
 import { SECTION_META } from '@/lib/types';
 
 interface BriefComparisonProps {
@@ -6,8 +6,8 @@ interface BriefComparisonProps {
   exaSeconds: number;
   exaSources: number;
   tavilySections: ResearchSections;
-  /** Used only for the source count in the column header. */
-  tavilySources: Citation[];
+  /** Source count shown in the Tavily column header. */
+  tavilySources: number;
   tavilySeconds: number;
 }
 
@@ -93,7 +93,7 @@ export function BriefComparison({
       />
       <BriefColumn
         label="Tavily Research"
-        sublabel={`Structured six-section brief · ${tavilySources.length} sources · ${tavilySeconds}s`}
+        sublabel={`Structured six-section brief · ${tavilySources} sources · ${tavilySeconds}s`}
         dotColor="var(--text-muted)"
         bg="var(--compare-tavily-bg)"
         border="var(--compare-tavily-border)"
