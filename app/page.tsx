@@ -52,8 +52,8 @@ export default function Home() {
     }
   }, [status, sections]);
 
-  async function handleResearch() {
-    const trimmed = companyName.trim();
+  async function handleResearch(nameOverride?: string) {
+    const trimmed = (typeof nameOverride === 'string' ? nameOverride : companyName).trim();
     if (!trimmed || status === 'loading') return;
 
     // Reset everything for a fresh run.
@@ -243,11 +243,29 @@ export default function Home() {
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>
                   Live research synthesizes dozens of sources and can take a couple of minutes. Try{' '}
-                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>Stripe</span> for an
-                  instant example brief, or try again.
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCompanyName('Stripe');
+                      handleResearch('Stripe');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      font: 'inherit',
+                      cursor: 'pointer',
+                      fontWeight: 500,
+                      color: 'var(--accent)',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Stripe
+                  </button>{' '}
+                  for an instant example brief, or try again.
                 </div>
               </div>
-              <button type="button" className="btn-secondary" onClick={handleResearch}>
+              <button type="button" className="btn-secondary" onClick={() => handleResearch()}>
                 Try again
               </button>
             </div>
