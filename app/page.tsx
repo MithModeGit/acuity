@@ -241,6 +241,11 @@ export default function Home() {
                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>
                   {errorMessage}
                 </div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>
+                  Live research synthesizes dozens of sources and can take a couple of minutes. Try{' '}
+                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>Stripe</span> for an
+                  instant example brief, or try again.
+                </div>
               </div>
               <button type="button" className="btn-secondary" onClick={handleResearch}>
                 Try again
