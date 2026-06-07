@@ -87,10 +87,13 @@ export function ScorecardPanel({
           const v = verdictStyle(row.verdict);
           return (
             <div key={row.key} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+              <h4 style={{ margin: 0 }}>
               <button
+                id={`scorecard-h-${row.key}`}
                 type="button"
                 onClick={() => setOpen(isOpen ? null : row.key)}
                 aria-expanded={isOpen}
+                aria-controls={`scorecard-p-${row.key}`}
                 style={{
                   width: '100%',
                   display: 'flex',
@@ -133,13 +136,19 @@ export function ScorecardPanel({
                   {isOpen ? '−' : '+'}
                 </span>
               </button>
+              </h4>
 
               {isOpen && (
-                <div style={{ padding: '0 22px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div
+                  id={`scorecard-p-${row.key}`}
+                  role="region"
+                  aria-labelledby={`scorecard-h-${row.key}`}
+                  style={{ padding: '0 22px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}
+                >
                   <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: 'var(--text-secondary)' }}>
                     {row.summary}
                   </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
                     <div
                       style={{
                         padding: '12px 14px',
