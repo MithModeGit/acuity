@@ -1,5 +1,6 @@
 import type { ResearchSections, TavilyResult } from '@/lib/types';
 import { SECTION_META } from '@/lib/types';
+import { hostname } from '@/lib/utils';
 
 interface ComparePanelProps {
   sections: ResearchSections;
@@ -9,14 +10,6 @@ interface ComparePanelProps {
   isLoading: boolean;
   /** Error message from the Tavily call, if it failed. */
   error?: string;
-}
-
-function hostname(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
 }
 
 const PANEL_HEIGHT = 620;

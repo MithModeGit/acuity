@@ -199,26 +199,26 @@ export default function Home() {
           )}
 
           {/* Controls */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <SearchInput
-              value={companyName}
-              onChange={setCompanyName}
-              onSubmit={handleResearch}
-              disabled={isLoading}
-            />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleResearch();
+            }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+          >
+            <SearchInput value={companyName} onChange={setCompanyName} disabled={isLoading} />
             <ContextSelector value={context} onChange={setContext} disabled={isLoading} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{CONTEXT_FRAMING[context]}</span>
               <button
-                type="button"
+                type="submit"
                 className="btn-primary"
-                onClick={handleResearch}
                 disabled={isLoading || !companyName.trim()}
               >
                 {isLoading ? 'Researching…' : 'Research'}
               </button>
             </div>
-          </div>
+          </form>
 
           {/* Error state */}
           {status === 'error' && (

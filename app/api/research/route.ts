@@ -9,6 +9,7 @@ import type {
   SeedFile,
 } from '@/lib/types';
 import { SECTION_META } from '@/lib/types';
+import { hostname } from '@/lib/utils';
 import stripeSeed from '@/data/stripe_seed.json';
 
 // The live Exa research call is long-running; allow up to 5 minutes.
@@ -35,14 +36,6 @@ function isResearchSections(value: unknown): value is ResearchSections {
 // "[Rippling product pages](https://www.rippling.com/products)".
 const MARKDOWN_LINK = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
 
-function hostnameOf(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
-
 /**
  * Live Exa research embeds its citations as inline markdown links inside each
  * section's text. We pull those out as that section's citations (far more
@@ -58,7 +51,7 @@ function extractSectionCitations(text: string): { clean: string; citations: Cita
     const url = match[2];
     if (seen.has(url)) continue;
     seen.add(url);
-    const host = hostnameOf(url);
+    const host = hostname(url);
     citations.push({
       // Prefer a concise descriptive label; fall back to the hostname.
       source_name: label.length > 0 && label.length <= 48 ? label : host,
@@ -79,11 +72,18 @@ function extractSectionCitations(text: string): { clean: string; citations: Cita
   // Lead is restricted to horizontal whitespace ([ \t], not \s) so a link at
   // the start of a line never swallows the preceding newline / paragraph break.
   const linkWithLead = /([ \t]*)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
-  const stripped = text.replace(linkWithLead, (_full, lead: string, label: string, _url, offset: number, str: string) => {
-    const prevChar = offset > 0 ? str[offset - 1] : '';
-    const isInline = /[A-Za-z0-9]/.test(prevChar);
-    return isInline ? `${lead}${label}` : '';
-  });
+  const stripped = text.replace(
+    linkWithLead,
+    (_full, lead: string, label: string, _url: string, offset: number, str: string) => {
+      const prevChar = offset > 0 ? str[offset - 1] : '';
+      // Only treat the link as a removable trailing citation when it follows
+      // sentence-ending punctuation or a previous citation's `)` / `]`.
+      // Otherwise it is inline prose, so keep its anchor text — this also keeps
+      // consecutive inline citations (e.g. "[Bridge](u1), [Stripe](u2)") intact.
+      const isTrailingCitation = /[.!?;)\]]/.test(prevChar);
+      return isTrailingCitation ? '' : `${lead}${label}`;
+    },
+  );
 
   // Tidy the leftover whitespace so the prose renders cleanly.
   const clean = stripped

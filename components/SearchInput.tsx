@@ -3,14 +3,14 @@
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  onSubmit: () => void;
   disabled?: boolean;
 }
 
 /**
- * Large company-name input. Submits on Enter (when not disabled / non-empty).
+ * Large company-name input. Submission is handled by the surrounding <form>
+ * (native Enter-to-submit), so this component only owns value + onChange.
  */
-export function SearchInput({ value, onChange, onSubmit, disabled }: SearchInputProps) {
+export function SearchInput({ value, onChange, disabled }: SearchInputProps) {
   return (
     <input
       className="input"
@@ -22,11 +22,6 @@ export function SearchInput({ value, onChange, onSubmit, disabled }: SearchInput
       spellCheck={false}
       aria-label="Company name"
       onChange={(e) => onChange(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && !disabled && value.trim()) {
-          onSubmit();
-        }
-      }}
     />
   );
 }
