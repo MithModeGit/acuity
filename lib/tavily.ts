@@ -17,6 +17,10 @@ export async function tavilySearch(companyName: string): Promise<TavilyApiRespon
     throw new Error('TAVILY_API_KEY is not set.');
   }
 
+  // Auth: the current Tavily API accepts the bearer header (verified working),
+  // but we also pass api_key in the body for compatibility with the older
+  // request format — belt-and-suspenders so a Tavily API change can't silently
+  // break the comparison panel.
   const response = await fetch('https://api.tavily.com/search', {
     method: 'POST',
     headers: {
@@ -24,6 +28,7 @@ export async function tavilySearch(companyName: string): Promise<TavilyApiRespon
       Authorization: `Bearer ${process.env.TAVILY_API_KEY}`,
     },
     body: JSON.stringify({
+      api_key: process.env.TAVILY_API_KEY,
       query: `${companyName} company investment research competitive analysis recent news`,
       search_depth: 'advanced',
       max_results: 10,
