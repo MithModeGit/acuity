@@ -7,6 +7,8 @@ interface ComparePanelProps {
   tavilyAnswer?: string;
   /** True while the Tavily call is in flight. */
   isLoading: boolean;
+  /** Error message from the Tavily call, if it failed. */
+  error?: string;
 }
 
 function hostname(url: string): string {
@@ -34,7 +36,7 @@ function StatusDot({ color }: { color: string }) {
  * neutral panel. The visual contrast — clean cited sections vs. a list of
  * snippets — is the product argument made visible.
  */
-export function ComparePanel({ sections, tavilyResults, tavilyAnswer, isLoading }: ComparePanelProps) {
+export function ComparePanel({ sections, tavilyResults, tavilyAnswer, isLoading, error }: ComparePanelProps) {
   return (
     <div className="compare-grid">
       {/* ── Exa panel ──────────────────────────────────────────────── */}
@@ -131,6 +133,27 @@ export function ComparePanel({ sections, tavilyResults, tavilyAnswer, isLoading 
                   <div className="loading-skeleton" style={{ height: 9, width: '85%' }} />
                 </div>
               ))}
+            </div>
+          ) : error ? (
+            <div
+              style={{
+                marginTop: 18,
+                padding: '12px 14px',
+                borderLeft: '3px solid var(--danger)',
+                background: 'var(--bg-section)',
+                border: '1px solid var(--border-subtle)',
+                borderLeftWidth: 3,
+                borderLeftColor: 'var(--danger)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 13,
+                lineHeight: 1.5,
+                color: 'var(--text-secondary)',
+              }}
+            >
+              <div style={{ fontWeight: 500, color: 'var(--text-primary)', marginBottom: 2 }}>
+                Comparison unavailable
+              </div>
+              {error}
             </div>
           ) : (
             <>

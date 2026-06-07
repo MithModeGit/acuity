@@ -37,6 +37,7 @@ export default function Home() {
   const [tavilyLoading, setTavilyLoading] = useState(false);
   const [tavilyResults, setTavilyResults] = useState<TavilyResult[] | null>(null);
   const [tavilyAnswer, setTavilyAnswer] = useState<string | undefined>(undefined);
+  const [tavilyError, setTavilyError] = useState('');
 
   // ── Staggered section reveal ─────────────────────────────────────────────
   useEffect(() => {
@@ -95,6 +96,7 @@ export default function Home() {
     setTavilyLoading(true);
     setTavilyResults(null);
     setTavilyAnswer(undefined);
+    setTavilyError('');
 
     try {
       const res = await fetch('/api/compare', {
@@ -103,12 +105,16 @@ export default function Home() {
         body: JSON.stringify({ companyName: submittedName }),
       });
 
-      if (!res.ok) throw new Error('Comparison failed.');
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(data.error ?? 'Comparison failed.');
+      }
 
       const data = (await res.json()) as CompareResult;
       setTavilyResults(data.results);
       setTavilyAnswer(data.answer);
-    } catch {
+    } catch (error) {
+      setTavilyError(error instanceof Error ? error.message : 'Comparison failed.');
       setTavilyResults([]);
       setTavilyAnswer(undefined);
     } finally {
@@ -302,6 +308,7 @@ export default function Home() {
                 tavilyResults={tavilyResults ?? []}
                 tavilyAnswer={tavilyAnswer}
                 isLoading={tavilyLoading}
+                error={tavilyError}
               />
             </div>
           )}
