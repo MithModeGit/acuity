@@ -335,7 +335,6 @@ export default function Home() {
                 <div style={{ marginTop: 20 }}>
                   <BriefComparison
                     exaSections={sections}
-                    exaCitations={citations}
                     exaSeconds={comparison.exa.research_seconds}
                     exaSources={comparison.exa.source_count}
                     tavilySections={comparison.tavily.sections}
