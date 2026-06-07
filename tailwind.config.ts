@@ -20,21 +20,26 @@ const config: Config = {
 
       page: 'var(--bg-page)',
       surface: 'var(--bg-surface)',
-      'surface-hover': 'var(--bg-surface-hover)',
+      input: 'var(--bg-input)',
+      section: 'var(--bg-section)',
+      skeleton: 'var(--bg-skeleton)',
 
       'text-primary': 'var(--text-primary)',
       'text-secondary': 'var(--text-secondary)',
       'text-muted': 'var(--text-muted)',
-      'text-disabled': 'var(--text-disabled)',
+      'text-caption': 'var(--text-caption)',
 
       accent: 'var(--accent)',
       'accent-hover': 'var(--accent-hover)',
       'accent-fg': 'var(--accent-fg)',
       'accent-subtle': 'var(--accent-subtle)',
 
+      'exa-green': 'var(--exa-green)',
+      'exa-green-subtle': 'var(--exa-green-subtle)',
+
       'border-subtle': 'var(--border-subtle)',
       'border-default': 'var(--border-default)',
-      'border-strong': 'var(--border-strong)',
+      'border-focus': 'var(--border-focus)',
     },
     extend: {
       fontFamily: {
@@ -48,9 +53,9 @@ const config: Config = {
         full: 'var(--radius-full)',
       },
       boxShadow: {
-        card: 'var(--shadow-card)',
-        dropdown: 'var(--shadow-dropdown)',
-        drawer: 'var(--shadow-drawer)',
+        input: 'var(--shadow-input)',
+        section: 'var(--shadow-section)',
+        button: 'var(--shadow-button)',
       },
       maxWidth: {
         brief: '760px',

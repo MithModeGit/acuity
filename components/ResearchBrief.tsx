@@ -24,7 +24,7 @@ export function ResearchBrief({ sections, citations, visibleSections, isLoading 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {SECTION_META.map((meta, i) => (
-          <LoadingSection key={meta.key} title={meta.title} lines={SKELETON_LINES[i]} />
+          <LoadingSection key={meta.key} index={i} title={meta.title} lines={SKELETON_LINES[i]} />
         ))}
       </div>
     );

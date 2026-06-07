@@ -1,39 +1,10 @@
-# Design System
-
-> **⚠️ ACUITY ADAPTATION (2026-06-06).** This file was originally written for
-> **Vantage** (a data-dense internal tool with a fixed dark sidebar, kanban
-> boards, and a company-detail drawer). Acuity is a **product-facing, centered,
-> single-column demo** — not a dashboard. The reconciliation, per CLAUDE.md and
-> ACUITY_SPEC.md, is:
->
-> - **Tokens — used exactly as specified.** The full `:root` block below, Geist
->   Sans/Mono, the radius/shadow scale, and the navy `--accent: #1C3461` are all
->   reproduced verbatim in `app/globals.css`. Colors are always referenced via
->   `var(--token)`; the default Tailwind palette is disabled in
->   `tailwind.config.ts`. No raw color utilities (`bg-blue-500`) anywhere.
-> - **Layout — Vantage-specific rules do NOT apply to Acuity.** Ignore the
->   Sidebar, Deal Cards (Kanban), Tables, Badges, and Drawer sections below.
->   Acuity uses a centered column (max-width 680px → 760px when the brief shows),
->   a top header bar, and a footer. There is no sidebar.
-> - **Added token:** `--font-sans` / `--font-mono` CSS variables map the
->   `@fontsource` Geist imports for use throughout.
-> - **Added animation:** a `section-reveal` keyframe (fade + 8px rise) powers the
->   staggered six-section reveal. It is defined in `app/globals.css` alongside
->   the existing `pulse-subtle` skeleton animation, and respects
->   `prefers-reduced-motion`. See the Animations section at the end.
->
-> Everything below is the original Vantage document, retained for its token set.
-
----
+# Design System — Acuity
 
 ## Philosophy
 
-Vantage is a professional internal sales tool. The visual language should be:
-- **Precise and data-dense** — like a Bloomberg terminal or Linear's interface, not a consumer app
-- **Calm and trustworthy** — dark sidebar, white content area, subtle shadows
-- **Invisible chrome** — the UI should disappear; the data is the star
+Acuity is a product-facing demo. Its aesthetic should feel like a polished B2B SaaS product that a professional would pay for — not a developer tool, not a dashboard, not a hackathon project. The reference aesthetic is premium financial data products: clean, precise, typography-forward, with a high-quality feel that matches the investment professional context.
 
-The app must not look AI-generated, vibe-coded, or like a design template. Every spacing, color, and typography decision is intentional.
+The visual language is distinct from Vantage (which is a dense internal tool). Acuity is centered, open, and readable.
 
 ---
 
@@ -41,7 +12,7 @@ The app must not look AI-generated, vibe-coded, or like a design template. Every
 
 ### Font: Geist Sans + Geist Mono
 
-Install via fontsource:
+Same font stack as Vantage. Install identically:
 ```bash
 npm install @fontsource-variable/geist @fontsource/geist-mono
 ```
@@ -52,312 +23,285 @@ import '@fontsource-variable/geist';
 import '@fontsource/geist-mono/400.css';
 ```
 
-Use in CSS:
-```css
-font-family: 'Geist Variable', system-ui, sans-serif;      /* all UI text */
-font-family: 'Geist Mono', 'JetBrains Mono', monospace;   /* emails, scores, code */
-```
+### Type Scale for Acuity
 
-### Type Scale
-
-| Use | Size | Weight | Line Height |
-|-----|------|--------|-------------|
-| Page title | 24px | 600 | 1.2 |
-| Section heading | 16px | 600 | 1.3 |
-| Card heading | 14px | 500 | 1.4 |
-| Body / labels | 14px | 400 | 1.5 |
-| Table data | 13px | 400 | 1.4 |
-| Metadata / timestamps | 12px | 400 | 1.4 |
-| Email addresses (mono) | 13px | 400 | 1.4 |
-| ICP scores (mono) | 14px | 500 | 1.2 |
+| Use | Size | Weight |
+|-----|------|--------|
+| Product name "Acuity" | 20px | 600 |
+| Company name in brief header | 28px | 700 |
+| Section titles | 15px | 600 |
+| Section content | 14px | 400 |
+| Citation chips | 11px | 400 |
+| Stats line | 12px | 400 |
+| Input labels | 13px | 500 |
+| Button text | 13px | 500 |
 
 ---
 
 ## Color System
 
-**All colors must be defined as CSS custom properties in `:root` and referenced via `var(--token)`. Never use raw Tailwind color utilities like `bg-blue-500` or `text-purple-600` in this project. The Tailwind default palette is overridden entirely.**
-
-Configure `tailwind.config.ts` to disable the default color palette and reference CSS variables for all color needs.
-
-### Full Token Set
-
-Add this to `app/globals.css`:
+Same CSS custom property approach as Vantage. Add to `app/globals.css`:
 
 ```css
 :root {
   /* ── Backgrounds ─────────────────────────────────── */
-  --bg-page: #F7F7F8;
-  --bg-surface: #FFFFFF;
-  --bg-surface-hover: #FAFAFA;
-  --bg-sidebar: #111111;
-  --bg-sidebar-hover: #1A1A1A;
-  --bg-sidebar-active: #242424;
+  --bg-page: #FFFFFF;
+  --bg-surface: #FAFAFA;
+  --bg-input: #FFFFFF;
+  --bg-section: #FFFFFF;
+  --bg-skeleton: #F1F1F3;
 
   /* ── Borders ─────────────────────────────────────── */
   --border-subtle: #E4E4E7;
   --border-default: #D4D4D8;
-  --border-strong: #A1A1AA;
+  --border-focus: #1C3461;
 
   /* ── Text ────────────────────────────────────────── */
   --text-primary: #18181B;
   --text-secondary: #52525B;
   --text-muted: #A1A1AA;
-  --text-disabled: #D4D4D8;
-  --text-on-dark: #F4F4F5;
-  --text-on-dark-muted: #A1A1AA;
+  --text-caption: #71717A;
 
-  /* ── Accent (deep navy — not Tailwind blue) ──────── */
+  /* ── Accent ──────────────────────────────────────── */
   --accent: #1C3461;
   --accent-hover: #162A52;
   --accent-fg: #FFFFFF;
-  --accent-subtle: #EEF2FF;
+  --accent-subtle: #F0F4FF;
 
-  /* ── Pipeline stage colors ───────────────────────── */
-  --stage-target: #6B7280;
-  --stage-contacted: #2563EB;
-  --stage-call: #7C3AED;
-  --stage-demo: #DB2777;
-  --stage-proposal: #D97706;
-  --stage-won: #16A34A;
-  --stage-lost: #EF4444;
+  /* ── Exa brand (for attribution and Compare header) */
+  --exa-green: #00C48C;
+  --exa-green-subtle: #F0FDF9;
 
-  /* ── Archetype badge colors ──────────────────────── */
-  --archetype-finance: #0369A1;
-  --archetype-sales: #7C3AED;
-  --archetype-research: #D97706;
-  --archetype-compliance: #0F766E;
-  --archetype-content: #BE185D;
+  /* ── Comparison panel ─────────────────────────────── */
+  --compare-exa-bg: #FAFFFE;
+  --compare-exa-border: #D1FAE5;
+  --compare-tavily-bg: #FAFAFA;
+  --compare-tavily-border: #E4E4E7;
 
-  /* ── Signal type colors ──────────────────────────── */
-  --signal-competitive: #DC2626;
-  --signal-funding: #16A34A;
-  --signal-hiring: #2563EB;
-  --signal-product: #7C3AED;
-  --signal-technology: #6B7280;
+  /* ── Shadows ─────────────────────────────────────── */
+  --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-section: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 1px 2px rgba(28, 52, 97, 0.2);
 
-  /* ── Shadows and radius ──────────────────────────── */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.10);
-  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.08);
+  /* ── Radius ──────────────────────────────────────── */
   --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-full: 9999px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 }
 ```
+
+Acuity uses slightly larger radius values than Vantage (8px vs 6px for cards) because it's product-facing rather than tool-facing. Still restrained — not pill-shaped or overly rounded.
 
 ---
 
 ## Layout
 
-### Root Layout
-- Sidebar: fixed left, 220px wide, full height, `background: var(--bg-sidebar)`
-- Main area: `margin-left: 220px`, `background: var(--bg-page)`, full viewport height minus any top bar
+### Page Structure
+- Max content width: `680px` centered with auto horizontal margins
+- Page background: `var(--bg-page)` — white
+- The brief output can expand to `760px` when sections are loaded
 
-### Spacing
-Use a 4px base unit. Common values: 4, 8, 12, 16, 20, 24, 32, 48px.
+### Header
+Top of page:
+```
+[Acuity wordmark — left]     [Powered by Exa — right, small]
+```
 
-### Content Max Width
-Main content areas: `max-width: 1200px` with auto horizontal margins. Tables and boards can extend to full width.
+### Main Content
+Centered column. Flow:
+1. Company name input + context selector (visible on load)
+2. Research button
+3. Loading skeletons (during API call)
+4. Six section cards (after load, staggered reveal)
+5. Compare with Tavily button (after all sections loaded)
+6. Split-screen comparison (when Compare is clicked)
 
 ---
 
 ## Component Rules
 
-### Cards
+### Search Input
 ```css
-background: var(--bg-surface);
+border: 1px solid var(--border-default);
+border-radius: var(--radius-md);
+background: var(--bg-input);
+font-size: 16px;
+height: 48px;
+padding: 0 16px;
+box-shadow: var(--shadow-input);
+width: 100%;
+
+/* Focus */
+border-color: var(--border-focus);
+box-shadow: 0 0 0 3px var(--accent-subtle);
+```
+
+Large and prominent — it's the primary interaction.
+
+### Context Selector
+Four horizontally arranged buttons. Behavior like a segmented control:
+```css
+/* Container */
+display: flex;
+gap: 4px;
 border: 1px solid var(--border-subtle);
 border-radius: var(--radius-md);
-box-shadow: var(--shadow-card);
-padding: 16px;
-```
-Never: colored card backgrounds, large border radius, deep shadows.
+padding: 3px;
+background: var(--bg-surface);
 
-### Deal Cards (Kanban)
-Same as Cards, plus:
-```css
-cursor: grab;
-transition: box-shadow 0.15s ease;
-```
-On hover: `box-shadow: var(--shadow-dropdown)` — subtle lift only, no color change.
-
-Stale indicator:
-```css
-border-left: 2px solid var(--stage-lost);
-```
-
-### Tables
-```css
-/* Header row */
-font-size: 11px;
+/* Individual button */
+border-radius: 6px;
+padding: 6px 14px;
+font-size: 12px;
 font-weight: 500;
-letter-spacing: 0.06em;
+color: var(--text-secondary);
+background: transparent;
+transition: all 0.15s;
+
+/* Active button */
+background: var(--accent);
+color: var(--accent-fg);
+```
+
+### Research Button
+Primary action — visually prominent:
+```css
+background: var(--accent);
+color: var(--accent-fg);
+height: 48px;
+padding: 0 24px;
+border-radius: var(--radius-md);
+font-size: 14px;
+font-weight: 600;
+box-shadow: var(--shadow-button);
+transition: background 0.15s, transform 0.1s;
+
+/* Hover */
+background: var(--accent-hover);
+transform: translateY(-1px);
+
+/* Active/loading */
+opacity: 0.75;
+cursor: not-allowed;
+```
+
+### Section Cards
+```css
+background: var(--bg-section);
+border: 1px solid var(--border-subtle);
+border-radius: var(--radius-lg);
+padding: 20px 24px;
+box-shadow: var(--shadow-section);
+margin-bottom: 12px;
+
+/* Section title */
+font-size: 13px;
+font-weight: 600;
+letter-spacing: 0.04em;
 text-transform: uppercase;
 color: var(--text-muted);
+margin-bottom: 10px;
 
-/* Data rows */
-font-size: 13px;
+/* Section content */
+font-size: 14px;
+line-height: 1.7;
 color: var(--text-primary);
-
-/* Alternating rows */
-background: var(--bg-surface);       /* odd */
-background: var(--bg-surface-hover); /* even */
-
-/* Row hover */
-background: var(--accent-subtle);
 ```
 
-### Badges (Archetype, Stage, Signal)
+### Section Reveal Animation
+```css
+@keyframes section-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-card {
+  animation: section-reveal 0.35s ease forwards;
+}
+```
+
+Apply with staggered delays: 0ms, 400ms, 800ms, 1200ms, 1600ms, 2000ms.
+
+### Citation Chips
 ```css
 display: inline-flex;
 align-items: center;
+gap: 4px;
 padding: 2px 8px;
 border-radius: var(--radius-sm);
-font-size: 11px;
-font-weight: 500;
-letter-spacing: 0.03em;
-
-/* Archetype badge */
-background: color-mix(in srgb, var(--archetype-finance) 12%, transparent);
-color: var(--archetype-finance);
-```
-
-### Buttons
-```css
-/* Primary */
-background: var(--accent);
-color: var(--accent-fg);
-border-radius: var(--radius-sm);
-height: 34px;
-padding: 0 14px;
-font-size: 13px;
-font-weight: 500;
-transition: background 0.15s;
-
-/* Primary hover */
-background: var(--accent-hover);
-
-/* Secondary */
-background: transparent;
-border: 1px solid var(--border-default);
-color: var(--text-primary);
-```
-
-Never: pill-shaped buttons (no `border-radius: 9999px` on buttons), gradient buttons, large buttons over 40px height.
-
-### Inputs and Textareas
-```css
-border: 1px solid var(--border-default);
-border-radius: var(--radius-sm);
 background: var(--bg-surface);
-color: var(--text-primary);
-font-size: 14px;
-padding: 8px 12px;
-height: 36px; /* for single-line inputs */
-transition: border-color 0.15s;
-
-/* Focus */
-border-color: var(--accent);
-outline: none;
-```
-
-### Sidebar Navigation Items
-```css
-display: flex;
-align-items: center;
-gap: 10px;
-padding: 8px 16px;
-border-radius: var(--radius-sm);
-color: var(--text-on-dark-muted);
-font-size: 13px;
-font-weight: 400;
-transition: background 0.1s;
+border: 1px solid var(--border-subtle);
+font-size: 11px;
+color: var(--text-caption);
+text-decoration: none;
 
 /* Hover */
-background: var(--bg-sidebar-hover);
-color: var(--text-on-dark);
-
-/* Active */
-background: var(--bg-sidebar-active);
-color: var(--text-on-dark);
-font-weight: 500;
+border-color: var(--accent);
+color: var(--accent);
 ```
 
-### Drawer (Company Detail)
+### Loading Skeletons
 ```css
-position: fixed;
-right: 0;
-top: 0;
-width: 480px;
-height: 100vh;
-background: var(--bg-surface);
-border-left: 1px solid var(--border-subtle);
-box-shadow: var(--shadow-drawer);
-overflow-y: auto;
-z-index: 50;
+background: var(--bg-skeleton);
+border-radius: var(--radius-md);
+animation: pulse-subtle 1.5s ease-in-out infinite;
 
-/* Animation */
-transform: translateX(100%);
-transition: transform 0.2s ease;
-
-/* Open state */
-transform: translateX(0);
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
 ```
+
+Show 6 skeleton cards with varying heights to simulate the expected section sizes.
+
+### Compare Panel
+Split-screen, full-width below the main brief:
+```css
+/* Exa panel */
+background: var(--compare-exa-bg);
+border: 1px solid var(--compare-exa-border);
+border-radius: var(--radius-lg);
+
+/* Tavily panel */
+background: var(--compare-tavily-bg);
+border: 1px solid var(--compare-tavily-border);
+border-radius: var(--radius-lg);
+```
+
+Panel headers use a subtle label: "Exa Deep Research" with a green dot vs "Tavily Search" with a gray dot.
 
 ---
 
 ## What to Avoid
 
-These patterns signal "AI-generated" and must not appear anywhere in Vantage:
+The same prohibitions as Vantage plus:
 
-- Any gradient backgrounds on cards, headers, or page backgrounds
-- `bg-blue-500`, `text-purple-600`, `border-green-400` — raw Tailwind color utilities
-- `rounded-xl` or `rounded-2xl` on cards (max `rounded-md` = 6px)
-- `shadow-lg` or `shadow-xl` on cards
-- Emoji in any UI text or labels
-- Bold, centered hero-style headings in a data tool
-- Animated gradient borders or glow effects
-- Any font other than Geist Sans and Geist Mono
-- Color schemes that look like a marketing landing page
+- Animated hero backgrounds, gradient orbs, or particle effects
+- The Exa or Acuity logo rendered as a large splash element
+- Any design pattern that says "startup demo" instead of "real product"
+- Cluttered layouts — generous white space is correct here
+- Multiple typefaces — Geist only
 
 ---
 
-## Animations
+## Stats Line
 
-Subtle only. Two acceptable uses:
-
-1. **Drawer slide-in**: `transform + transition` as specified above — 200ms ease
-2. **Loading states**: a subtle pulse opacity animation for skeleton loading placeholders
-
-```css
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-.loading-skeleton {
-  animation: pulse-subtle 1.5s ease-in-out infinite;
-  background: var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
+After the brief loads, show a subtle single line below the company name header:
+```
+6 sections  ·  [N] sources  ·  Completed in [X] seconds
 ```
 
-3. **Section reveal (Acuity)**: each research section fades and rises 8px into
-   place as it is revealed during the staggered 400ms-interval reveal. Subtle,
-   single-shot, no bounce.
-
+Style:
 ```css
-@keyframes section-reveal {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.section-reveal {
-  animation: section-reveal 0.4s ease forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .section-reveal, .loading-skeleton { animation: none; }
-}
+font-size: 12px;
+color: var(--text-muted);
+letter-spacing: 0.03em;
 ```
 
-No page transitions, no bouncing, no spring physics. This is a professional data tool.
+This makes the speed and comprehensiveness concrete without requiring explanation.

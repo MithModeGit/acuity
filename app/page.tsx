@@ -135,18 +135,19 @@ export default function Home() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-          <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>
+          <span style={{ fontSize: 20, fontWeight: 600, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>
             Acuity
           </span>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Investment Research Intelligence</span>
         </div>
-        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, color: 'var(--text-secondary)' }}>
+          <span aria-hidden style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--exa-green)' }} />
           Powered by{' '}
           <a
             href="https://exa.ai"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'var(--accent)', fontWeight: 500 }}
+            style={{ color: 'var(--accent)', fontWeight: 600 }}
           >
             Exa
           </a>
@@ -216,11 +217,11 @@ export default function Home() {
           {/* Error state */}
           {status === 'error' && (
             <div
-              className="card"
+              className="section-card"
               style={{
                 marginTop: 28,
                 padding: 20,
-                borderLeft: '2px solid var(--stage-lost)',
+                borderLeft: '3px solid var(--danger)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -241,26 +242,25 @@ export default function Home() {
             </div>
           )}
 
-          {/* Stats line */}
+          {/* Company header + stats line */}
           {status === 'complete' && sections && (
-            <div
-              style={{
-                marginTop: 28,
-                marginBottom: 16,
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: 10,
-                flexWrap: 'wrap',
-              }}
-            >
-              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div style={{ marginTop: 28, marginBottom: 18 }}>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 28,
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  color: 'var(--text-primary)',
+                }}
+              >
                 {submittedName}
               </h2>
-              <span style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', letterSpacing: '0.03em', marginTop: 6 }}>
                 {TOTAL_SECTIONS} sections
                 {sourceCount > 0 && ` · ${sourceCount} sources`}
-                {researchSeconds > 0 && ` · completed in ${researchSeconds}s`}
-              </span>
+                {researchSeconds > 0 && ` · completed in ${researchSeconds} seconds`}
+              </div>
             </div>
           )}
 

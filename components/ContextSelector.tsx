@@ -18,7 +18,7 @@ const CONTEXTS: ResearchContext[] = [
 
 /**
  * Four-option segmented control for the research framing. The active option
- * uses the navy accent. Drives the systemPrompt/instructions sent to Exa.
+ * uses the navy accent. Drives the instructions sent to Exa.
  */
 export function ContextSelector({ value, onChange, disabled }: ContextSelectorProps) {
   return (
@@ -26,10 +26,9 @@ export function ContextSelector({ value, onChange, disabled }: ContextSelectorPr
       role="radiogroup"
       aria-label="Research context"
       style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        display: 'flex',
         gap: 4,
-        padding: 4,
+        padding: 3,
         background: 'var(--bg-surface)',
         border: '1px solid var(--border-subtle)',
         borderRadius: 'var(--radius-md)',
@@ -46,14 +45,15 @@ export function ContextSelector({ value, onChange, disabled }: ContextSelectorPr
             disabled={disabled}
             onClick={() => onChange(context)}
             style={{
-              height: 34,
-              padding: '0 8px',
+              flex: 1,
+              height: 32,
+              padding: '0 12px',
               border: 'none',
-              borderRadius: 'var(--radius-sm)',
+              borderRadius: 6,
               background: active ? 'var(--accent)' : 'transparent',
               color: active ? 'var(--accent-fg)' : 'var(--text-secondary)',
-              fontSize: 13,
-              fontWeight: active ? 500 : 400,
+              fontSize: 12,
+              fontWeight: 500,
               fontFamily: 'var(--font-sans)',
               cursor: disabled ? 'not-allowed' : 'pointer',
               transition: 'background 0.15s ease, color 0.15s ease',

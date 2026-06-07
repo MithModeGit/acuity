@@ -14,6 +14,9 @@ interface SectionCardProps {
  * A single research section. Renders nothing until `isVisible` becomes true,
  * at which point it animates in via the section-reveal keyframe. This is what
  * produces the "assembled in real time" staggered reveal.
+ *
+ * Visual hierarchy (per DESIGN_SYSTEM.md): an uppercase muted eyebrow label,
+ * then the analysis in primary text at a generous 1.7 line-height.
  */
 export function SectionCard({
   index,
@@ -27,32 +30,31 @@ export function SectionCard({
 
   return (
     <article
-      className="card section-reveal"
-      style={{ padding: '20px 22px', animationDelay: `${animationDelay}ms` }}
+      className="section-card section-reveal"
+      style={{ padding: '20px 24px', animationDelay: `${animationDelay}ms` }}
     >
-      <header style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 12 }}>
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 12,
-            fontWeight: 500,
-            color: 'var(--text-muted)',
-            minWidth: 18,
-          }}
-        >
+      <h2
+        style={{
+          margin: '0 0 10px',
+          fontSize: 13,
+          fontWeight: 600,
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          color: 'var(--text-muted)',
+        }}
+      >
+        <span style={{ fontFamily: 'var(--font-mono)', marginRight: 8 }}>
           {String(index + 1).padStart(2, '0')}
         </span>
-        <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3 }}>
-          {title}
-        </h2>
-      </header>
+        {title}
+      </h2>
 
       <p
         style={{
           margin: 0,
           fontSize: 14,
-          lineHeight: 1.6,
-          color: 'var(--text-secondary)',
+          lineHeight: 1.7,
+          color: 'var(--text-primary)',
           whiteSpace: 'pre-line',
         }}
       >

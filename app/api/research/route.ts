@@ -31,53 +31,72 @@ function isResearchSections(value: unknown): value is ResearchSections {
   return SECTION_META.every((s) => typeof v[s.key] === 'string' && (v[s.key] as string).length > 0);
 }
 
-/** Recursively collect every {url, ...} object found anywhere in the events tree. */
-function collectUrls(node: unknown, found: Map<string, Citation>): void {
-  if (node === null || typeof node !== 'object') return;
-  if (Array.isArray(node)) {
-    for (const item of node) collectUrls(item, found);
-    return;
+// Matches inline markdown citations Exa embeds in the prose, e.g.
+// "[Rippling product pages](https://www.rippling.com/products)".
+const MARKDOWN_LINK = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+
+function hostnameOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
   }
-  const obj = node as Record<string, unknown>;
-  const url = obj.url;
-  if (typeof url === 'string' && /^https?:\/\//.test(url) && !found.has(url)) {
-    let sourceName = url;
-    try {
-      sourceName = new URL(url).hostname.replace(/^www\./, '');
-    } catch {
-      /* keep raw url as the source name */
-    }
-    const title = typeof obj.title === 'string' ? obj.title : undefined;
-    const published =
-      typeof obj.publishedDate === 'string'
-        ? obj.publishedDate
-        : typeof obj.published_date === 'string'
-          ? (obj.published_date as string)
-          : undefined;
-    found.set(url, {
-      source_name: title && title.length < 60 ? title : sourceName,
-      url,
-      published_date: published,
-    });
-  }
-  for (const key of Object.keys(obj)) collectUrls(obj[key], found);
 }
 
 /**
- * Live Exa research returns no per-section citation map. We extract the source
- * URLs Exa actually read (from the events log) and distribute them round-robin
- * across the six sections so each card shows real, clickable sources.
+ * Live Exa research embeds its citations as inline markdown links inside each
+ * section's text. We pull those out as that section's citations (far more
+ * relevant than scraping every URL from the events log) and strip the markdown
+ * so the prose renders cleanly. Returns the cleaned text plus its citations.
  */
-function buildCitationsFromEvents(events: unknown): SectionCitations {
-  const found = new Map<string, Citation>();
-  collectUrls(events, found);
-  const list = Array.from(found.values());
+function extractSectionCitations(text: string): { clean: string; citations: Citation[] } {
+  const citations: Citation[] = [];
+  const seen = new Set<string>();
+
+  for (const match of text.matchAll(MARKDOWN_LINK)) {
+    const label = match[1].trim();
+    const url = match[2];
+    if (seen.has(url)) continue;
+    seen.add(url);
+    const host = hostnameOf(url);
+    citations.push({
+      // Prefer a concise descriptive label; fall back to the hostname.
+      source_name: label.length > 0 && label.length <= 48 ? label : host,
+      url,
+    });
+  }
+
+  // Remove the markdown link tokens and tidy the leftover whitespace so the
+  // displayed prose is clean. The citations live in the chips instead.
+  const clean = text
+    .replace(MARKDOWN_LINK, '')
+    .replace(/\p{Zs}/gu, ' ') // normalize non-breaking / thin spaces
+    .replace(/\(\s*\)/g, '') // drop now-empty parens, e.g. "( )"
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/[ \t]+([.,;:!?)])/g, '$1') // no space before punctuation
+    .replace(/([(])[ \t]+/g, '$1') // no space after opening paren
+    .replace(/[ \t]+\n/g, '\n')
+    .trim();
+
+  return { clean, citations };
+}
+
+/**
+ * Build cleaned sections + per-section citations from the raw Exa output by
+ * extracting the inline markdown citations Exa placed in each section.
+ */
+function processLiveSections(raw: ResearchSections): {
+  sections: ResearchSections;
+  citations: SectionCitations;
+} {
+  const sections = { ...raw };
   const citations: SectionCitations = {};
-  list.forEach((citation, i) => {
-    const sectionKey = SECTION_META[i % SECTION_META.length].key;
-    (citations[sectionKey] ??= []).push(citation);
-  });
-  return citations;
+  for (const meta of SECTION_META) {
+    const { clean, citations: found } = extractSectionCitations(raw[meta.key]);
+    sections[meta.key] = clean;
+    if (found.length > 0) citations[meta.key] = found;
+  }
+  return { sections, citations };
 }
 
 export async function POST(request: NextRequest) {
@@ -117,7 +136,6 @@ export async function POST(request: NextRequest) {
     });
 
     const research = await exa.research.pollUntilFinished(created.researchId, {
-      events: true,
       pollInterval: 2000,
       timeoutMs: 280000,
     });
@@ -139,9 +157,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const { sections, citations } = processLiveSections(parsed);
     const result: ResearchResult = {
-      sections: parsed,
-      citations: buildCitationsFromEvents(research.events),
+      sections,
+      citations,
       research_seconds: Math.round((Date.now() - startedAt) / 1000),
     };
     return NextResponse.json(result);

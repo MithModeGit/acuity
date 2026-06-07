@@ -5,72 +5,63 @@
 /* ════════════════════════════════════════════════════════════════════════
    Acuity Design Tokens
    The :root block below is the canonical token set from docs/DESIGN_SYSTEM.md,
-   reproduced exactly. Acuity-specific additions (font vars, the section-reveal
-   keyframe, accent-subtle usage) are documented in DESIGN_SYSTEM.md.
+   reproduced exactly. A small "supplementary" block follows for interaction
+   states (hover / disabled / danger) and utilities (full radius, font vars)
+   that the design system does not enumerate but the components require.
    ════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Fonts (mapped from @fontsource imports in layout.tsx) ─────────── */
-  --font-sans: 'Geist Variable', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
-
   /* ── Backgrounds ─────────────────────────────────── */
-  --bg-page: #F7F7F8;
-  --bg-surface: #FFFFFF;
-  --bg-surface-hover: #FAFAFA;
-  --bg-sidebar: #111111;
-  --bg-sidebar-hover: #1A1A1A;
-  --bg-sidebar-active: #242424;
+  --bg-page: #FFFFFF;
+  --bg-surface: #FAFAFA;
+  --bg-input: #FFFFFF;
+  --bg-section: #FFFFFF;
+  --bg-skeleton: #F1F1F3;
 
   /* ── Borders ─────────────────────────────────────── */
   --border-subtle: #E4E4E7;
   --border-default: #D4D4D8;
-  --border-strong: #A1A1AA;
+  --border-focus: #1C3461;
 
   /* ── Text ────────────────────────────────────────── */
   --text-primary: #18181B;
   --text-secondary: #52525B;
   --text-muted: #A1A1AA;
-  --text-disabled: #D4D4D8;
-  --text-on-dark: #F4F4F5;
-  --text-on-dark-muted: #A1A1AA;
+  --text-caption: #71717A;
 
-  /* ── Accent (deep navy — not Tailwind blue) ──────── */
+  /* ── Accent ──────────────────────────────────────── */
   --accent: #1C3461;
   --accent-hover: #162A52;
   --accent-fg: #FFFFFF;
-  --accent-subtle: #EEF2FF;
+  --accent-subtle: #F0F4FF;
 
-  /* ── Pipeline stage colors ───────────────────────── */
-  --stage-target: #6B7280;
-  --stage-contacted: #2563EB;
-  --stage-call: #7C3AED;
-  --stage-demo: #DB2777;
-  --stage-proposal: #D97706;
-  --stage-won: #16A34A;
-  --stage-lost: #EF4444;
+  /* ── Exa brand (for attribution and Compare header) */
+  --exa-green: #00C48C;
+  --exa-green-subtle: #F0FDF9;
 
-  /* ── Archetype badge colors ──────────────────────── */
-  --archetype-finance: #0369A1;
-  --archetype-sales: #7C3AED;
-  --archetype-research: #D97706;
-  --archetype-compliance: #0F766E;
-  --archetype-content: #BE185D;
+  /* ── Comparison panel ─────────────────────────────── */
+  --compare-exa-bg: #FAFFFE;
+  --compare-exa-border: #D1FAE5;
+  --compare-tavily-bg: #FAFAFA;
+  --compare-tavily-border: #E4E4E7;
 
-  /* ── Signal type colors ──────────────────────────── */
-  --signal-competitive: #DC2626;
-  --signal-funding: #16A34A;
-  --signal-hiring: #2563EB;
-  --signal-product: #7C3AED;
-  --signal-technology: #6B7280;
+  /* ── Shadows ─────────────────────────────────────── */
+  --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-section: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 1px 2px rgba(28, 52, 97, 0.2);
 
-  /* ── Shadows and radius ──────────────────────────── */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.10);
-  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.08);
+  /* ── Radius ──────────────────────────────────────── */
   --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ── Supplementary (interaction states + utilities) ── */
+  --font-sans: 'Geist Variable', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+  --bg-surface-hover: #F4F4F5;
+  --border-strong: #A1A1AA;
+  --text-disabled: #D4D4D8;
+  --danger: #DC2626;
   --radius-full: 9999px;
 }
 
@@ -107,7 +98,7 @@ a {
    Animations
    ════════════════════════════════════════════════════════════════════════ */
 
-/* Skeleton loading pulse (from DESIGN_SYSTEM.md) */
+/* Skeleton loading pulse */
 @keyframes pulse-subtle {
   0%,
   100% {
@@ -120,16 +111,15 @@ a {
 
 .loading-skeleton {
   animation: pulse-subtle 1.5s ease-in-out infinite;
-  background: var(--border-subtle);
-  border-radius: var(--radius-sm);
+  background: var(--bg-skeleton);
+  border-radius: var(--radius-md);
 }
 
-/* Section reveal — Acuity-specific. Each section card fades and rises into
-   place when it becomes visible during the staggered reveal. */
+/* Section reveal — fade + 6px rise as each section becomes visible. */
 @keyframes section-reveal {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -138,7 +128,7 @@ a {
 }
 
 .section-reveal {
-  animation: section-reveal 0.4s ease forwards;
+  animation: section-reveal 0.35s ease forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -153,53 +143,58 @@ a {
    Colors always come from var(--token); never raw Tailwind color utilities.
    ════════════════════════════════════════════════════════════════════════ */
 
-.card {
-  background: var(--bg-surface);
+/* Section card */
+.section-card {
+  background: var(--bg-section);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-section);
 }
 
-/* Primary button */
+/* Primary (Research) button */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  height: 48px;
+  padding: 0 24px;
   background: var(--accent);
   color: var(--accent-fg);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-sm);
-  height: 38px;
-  padding: 0 18px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: var(--shadow-button);
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
 .btn-primary:disabled {
   background: var(--text-disabled);
-  border-color: var(--text-disabled);
+  box-shadow: none;
   cursor: not-allowed;
 }
 
-/* Secondary button */
+/* Secondary button (Compare / Try again) */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--bg-surface);
+  height: 42px;
+  padding: 0 20px;
+  background: var(--bg-section);
   border: 1px solid var(--border-default);
   color: var(--text-primary);
-  border-radius: var(--radius-sm);
-  height: 38px;
-  padding: 0 18px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -207,8 +202,9 @@ a {
 }
 
 .btn-secondary:hover:not(:disabled) {
-  border-color: var(--border-strong);
-  background: var(--bg-surface-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-subtle);
 }
 
 .btn-secondary:disabled {
@@ -216,18 +212,19 @@ a {
   cursor: not-allowed;
 }
 
-/* Text input */
+/* Search input */
 .input {
   width: 100%;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  font-size: 16px;
-  font-family: var(--font-sans);
-  padding: 0 16px;
   height: 48px;
-  transition: border-color 0.15s ease;
+  padding: 0 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  box-shadow: var(--shadow-input);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .input::placeholder {
@@ -235,12 +232,13 @@ a {
 }
 
 .input:focus {
-  border-color: var(--accent);
+  border-color: var(--border-focus);
   outline: none;
+  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .input:disabled {
-  background: var(--bg-surface-hover);
+  background: var(--bg-surface);
   color: var(--text-muted);
   cursor: not-allowed;
 }
@@ -254,15 +252,15 @@ a {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   background: var(--bg-surface);
-  color: var(--text-secondary);
-  font-size: 12px;
+  color: var(--text-caption);
+  font-size: 11px;
   line-height: 1.4;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .citation-chip:hover {
-  border-color: var(--border-strong);
-  background: var(--bg-surface-hover);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Custom scrollbar for compare columns */

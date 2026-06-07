@@ -28,10 +28,10 @@ export function CitationChip({ citation }: CitationChipProps) {
       className="citation-chip"
       title={citation.url}
     >
-      <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{citation.source_name}</span>
+      <span style={{ fontWeight: 500 }}>{citation.source_name}</span>
       {date && (
         <>
-          <span aria-hidden style={{ color: 'var(--border-strong)' }}>
+          <span aria-hidden style={{ opacity: 0.5 }}>
             ·
           </span>
           <span>{date}</span>
@@ -47,7 +47,7 @@ export function CitationChip({ citation }: CitationChipProps) {
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        style={{ color: 'var(--text-muted)', flexShrink: 0 }}
+        style={{ flexShrink: 0, opacity: 0.7 }}
       >
         <path d="M7 17 17 7" />
         <path d="M7 7h10v10" />
