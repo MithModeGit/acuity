@@ -1,0 +1,112 @@
+{
+  "company": "Stripe",
+  "exa": {
+    "research_seconds": 186,
+    "source_count": 43
+  },
+  "tavily": {
+    "research_seconds": 338,
+    "source_count": 15,
+    "sections": {
+      "company_overview": "Stripe is a global payments infrastructure and embedded-finance platform powering more than 5 million businesses directly or via platforms and processing multi-trillion dollars of payments annually: research sources report $1.0 trillion total payment volume in 2023, roughly $1.4 trillion annually as of 2025 (38% YoY growth), and $1.9 trillion in 2025 in a separate report. Publicly reported net revenue figures include approximately $5.1 billion in 2024 and Stripe Payments International Holdings net revenue of $3.8 billion in 2023. Product revenue signals in the findings show meaningful diversification across billing/subscription (one source reports $3.4 billion subscription revenue), Terminal (~$800 million), and Radar (~$500 million), while product launches and M&A activity (Metronome acquisition, Privy acquisition, Stablecoin Financial Accounts, Tempo blockchain, Adaptive Pricing and Machine Payments Protocol in 2026) indicate expansion into usage-based billing, stablecoin payments, wallets and settlement primitives. Stripe's historical private capital and tender history is documented: total reported funding ~ $9.4-$9.81 billion since founding; valuation milestones cited in the findings include a $95 billion peak in 2021, $65 billion after an early-2024 tender, a $91.5 billion employee-liquidity tender in Feb 2025 (with an associated EV/2024-revenue multiple reported at ~17.9x), an internal 409A of $106.7 billion in Jan 2026, and conflicting press reports of a February 2026 tender valuation of $140 billion vs $159 billion (sources conflict). Stripe's 2025 annual letter states the company remained robustly profitable in 2025 and highlights enterprise customer adoption (including major cloud/AI customers) and continued product investment.",
+      "competitive_landscape": "Direct and adjacent competitors identified in the findings include PayPal, Block (Square), Adyen, Checkout.com, FIS/Worldpay, Global Payments, Visa, Mastercard, PayU, Razorpay and regional/vertical players noted in press. PayPal metrics in the findings show ~ $1.79 trillion processed in 2025 and an estimated 43%-45% share of the online payment-processing market in 2026. Adyen is reported to have processed EUR 516 billion in the last year and announced a EUR 750 million acquisition of Talon.One (deal to close H2 2026); Checkout.com is cited as having surpassed $300 billion in volume with 45% growth and recent profit improvement. Processor/aggregator M&A and strategic actions in the findings include Global Payments completing an acquisition of Worldpay (Jan 9, 2026), Rapyd acquiring PayU GPO for $610 million, and GTCR committing to Worldpay Merchant Solutions in a transaction valued at $18.5 billion. In regional markets, Razorpay is documented as holding 55% of India's payment-gateway market (April 2025) and Rapyd's PayU GPO acquisition expands presence in CEE/LatAm; Visa and Mastercard scale metrics (Visa processing ~$16-17 trillion of payments/fiscal volumes in 2024-25 and material growth in value-added services) underscore competitive pressure from networks offering value-added services.",
+      "industry_macro": "Macro market estimates in the findings vary by scope: one source (Mordor Intelligence) estimates the global payments market at USD 49.10 trillion in 2026, while a separate industry report estimates a payments market of USD 857.83 billion in 2026 (these figures reflect differing definitions and the research contains both figures without reconciliation). JP Morgan-framed 'mega-themes' in the findings quantify large addressable flows (embedded payments $1.1 trillion, real-time $5.3 trillion, online $6.8 trillion and wallets $4.4 trillion) and Visa reports total payments/cash volume in the mid-teens of trillions annually, highlighting large underlying growth drivers: merchant acceptance, embedded finance, BNPL/instalments, cross-border flows and adoption of new rails and tokenization. Margin pressure factors cited include regulatory fee ceilings (one source states EU and India fee ceilings compress traditional card margins by up to 70%) and competitive fee dynamics (stablecoin payment fees reported materially lower than card fees in findings). The research did not surface a specific new regulatory enforcement action within the last 90 days in the provided findings; findings do document continued product launches tied to local rails (PayTo in Australia, Pay by Bank in UK, Alma in France) that imply jurisdictional licensing and compliance work.",
+      "moat_defensibility": "Findings document several concrete durability signals: large scale and breadth (powering >5 million businesses directly or via platforms, processing multiple trillions in payment volume, and handling >50,000 transactions per minute) that support network-effects and data advantages; product-level defensibility such as Radar (fraud detection priced per transaction) and Connect/Billing (wide enterprise adoption - e.g., >300,000 businesses on Billing including leading AI companies); and recent M&A (Metronome, Privy) and product launches (Stablecoin Financial Accounts, Tempo, Machine Payments Protocol, Adaptive Pricing) that expand capabilities into wallets, stablecoin settlement and usage-based billing. Findings also show material stablecoin activity (stablecoin volume doubled to ~$400 billion in 2025 with a reported 1.5% fee versus ~2.9% for card payments), which could create payments and settlement advantages tied to Tempo/Privy integration. The research did not provide an explicit, sourced breakdown labeling which Stripe products are commoditized, but the breadth of platform products plus proprietary data (fraud signals, wallet counts from Privy) and integrations with major platforms are presented in the findings as the primary sources of defensibility.",
+      "investment_landscape": "Precedent transactions and public-comp comps pulled from the findings include: Adyen's announced acquisition of Talon.One for EUR 750 million (press release), Rapyd's acquisition of PayU GPO for $610 million, Global Payments' completion of a Worldpay acquisition (Jan 9, 2026), GTCR's majority purchase of Worldpay Merchant Solutions in a deal valued at $18.5 billion, FIS-era trophies that include large processor M&A (one source states FIS originally acquired Worldpay for $43 billion and another documents earlier large-scale deals), and Mastercard's $300 million minority investment in Corpay at an approximate $13 billion enterprise valuation - these represent both control and minority transactions across the sector. Recent deal-structure signals in the findings show a mix of minority investments and full acquisitions: Stripe itself has used tender offers and share repurchases for employee liquidity (Feb 2025 tender at $91.5 billion), large processors and strategic acquirers have completed full acquisitions (Global Payments/Worldpay) and strategics have executed minority investments (Mastercard/Corpay). Valuation reference points available in the findings map to observable private market marks: $65 billion (early-2024 tender), $91.5 billion (Feb 2025 tender, with an explicit ~17.9x 2024 net revenue multiple reported), an internal 409A of $106.7 billion (Jan 2026), and press-reported February 2026 tender valuations reported variously at $140 billion and $159 billion (findings conflict). The research did not provide a consistent set of EV/Revenue or EV/EBITDA multiples for a full comp set in the findings.",
+      "key_questions": "Top diligence questions (prioritized): 1) Current and historical take-rate by product (Payments, Connect, Billing, Issuing, Radar, Treasury, Capital, stablecoin flows) - request product-level revenue and GM margins. 2) GAAP vs adjusted revenue and profitability reconciliation and the basis for the 2025 profitability claim - request audited financial statements. 3) Latest TPV cadence and composition (card vs stablecoin vs A2A) and merchant cohort trends. 4) Customer concentration and top-customer exposure (enterprise customers named in findings and impact if any lost). 5) Recurring revenue/backlog and the Metronome ARR projection (one finding projects Metronome at $1 billion ARR in 2026). 6) Stablecoin and Tempo monetization: fee schedules, legal/regulatory opinions and counterparty risk. 7) Regulatory/licensing coverage by jurisdiction and any open supervisory actions. 8) Merchant churn, unit economics (CAC/LTV) and cohort retention for platform customers. 9) Gross margin dynamics and partner fee pass-throughs (research shows net take-rate below 1% in one finding). 10) Capital and liquidity arrangements (settlement float, capital requirements for issuing/stablecoin services). 11) Contractual terms with major partners and merchants. 12) Details on employee tender offers, insider transfers and existing investor rights that would affect deal structure."
+    },
+    "sources": [
+      { "source_name": "Sacra", "url": "https://sacra.com/c/stripe" },
+      { "source_name": "Contrary Research", "url": "https://research.contrary.com/company/stripe" },
+      { "source_name": "PayCompass (Stripe Stats)", "url": "https://paycompass.com/blog/stripe-statistics" },
+      { "source_name": "Stripe Blog: Product", "url": "https://stripe.com/blog/product" },
+      { "source_name": "Stripe — Everything we announced at Sessions 2026", "url": "https://stripe.com/blog/everything-we-announced-at-sessions-2026" },
+      { "source_name": "Stripe — Sessions 2025 updates", "url": "https://stripe.com/blog/top-product-updates-sessions-2025" },
+      { "source_name": "Exa Websets — Stripe funding", "url": "https://exa.ai/websets/directory/stripe-funding" },
+      { "source_name": "Tracxn — Stripe profile", "url": "https://tracxn.com/d/companies/stripe/__uahG_IGnVgsUsOG-f8otYHLkOkliWg7YFhJ5ZkNIkpI" },
+      { "source_name": "Stripe — 2025 annual letter (announcement)", "url": "https://stripe.com/newsroom/news/stripe-2025-update" },
+      { "source_name": "TechCrunch — Stripe $159B", "url": "https://techcrunch.com/2026/02/24/stripes-valuation-soars-74-to-159-billion" },
+      { "source_name": "Stripe — 2025 annual letter (PDF)", "url": "https://assets.stripeassets.com/fzn2n1nzq965/3LlGw839Q6kUwxZlLZDtH6/75ddcbada4aa7743dd8ec7d0f9ca497e/Stripe-annual-letter-2025-desktop.pdf" },
+      { "source_name": "ByteBridge (Medium)", "url": "https://bytebridge.medium.com/stripe-inc-a-comprehensive-report-d6c422b66ce1" },
+      { "source_name": "MBI Deep Dives — Adyen", "url": "https://mbideepdives.substack.com/p/adyey" },
+      { "source_name": "Javelin Strategy", "url": "https://javelinstrategy.com/research/what-fiss-latest-deal-says-about-finding-synergies-across-payments-value-chain" },
+      { "source_name": "market.us — Payment Processing report", "url": "https://market.us/report/payment-processing-solution-market" }
+    ]
+  },
+  "scorecard": [
+    {
+      "key": "source_fidelity",
+      "label": "Source fidelity & authority",
+      "exa_rating": 4,
+      "tavily_rating": 3,
+      "verdict": "Exa edge",
+      "summary": "Exa pulled more institutional, finance-grade sources across a broader set; Tavily grounded well in Stripe's primary letter but also leaned on SEO/stat blogs.",
+      "exa_evidence": "Exa cited Houlihan Lokey's Q1-2026 FinTech update, McKinsey M&A, PwC, the U.S. Federal Reserve, J.P. Morgan and Forrester — bulge-bracket, consultancy and central-bank-grade sources a banker trusts. It also returns dated, excerpted, scored citations at the API level.",
+      "tavily_evidence": "Tavily's standout source was Stripe's actual 2025 annual-letter PDF (excellent primary grounding), but its 15-source set also included SEO/stat blogs — PayCompass ('Stripe Stats'), a market.us market-size report, and a ByteBridge Medium post. Its sources carry title + URL only (no dates or excerpts)."
+    },
+    {
+      "key": "comprehensiveness",
+      "label": "Comprehensiveness",
+      "exa_rating": 4,
+      "tavily_rating": 4,
+      "verdict": "Parity",
+      "summary": "Different, complementary strengths. Exa cast a wider net (43 vs 15 sources) with broader sector M&A; Tavily packed denser company-level financials despite fewer sources.",
+      "exa_evidence": "43 sources and broad sector-M&A breadth: Capital One/Brex $5.15B, Francisco Partners/Moneris, Ramp's $44B round (dated days before the run), Global Payments/Worldpay, plus a ~7.7x sector EV/Revenue anchor.",
+      "tavily_evidence": "Denser Stripe-specific financials from one-third the sources: the $106.7B Jan-2026 internal 409A, Stripe Payments International Holdings net revenue of $3.8B (2023), an explicit 17.9x multiple, and product-line revenue signals (subscription, Terminal, Radar)."
+    },
+    {
+      "key": "synthesis",
+      "label": "Synthesis & structure",
+      "exa_rating": 4,
+      "tavily_rating": 3,
+      "verdict": "Exa edge",
+      "summary": "Both returned valid structured JSON. Exa reads like a finished analyst brief; Tavily reads like dense, hedged research notes that repeatedly break the fourth wall.",
+      "exa_evidence": "\"Stripe competes across several fronts rather than against a single rival. In enterprise payments its primary competitor is Adyen, the Amsterdam-listed processor known for a single-platform architecture and strong profitability, which has won large merchants on unit economics.\" — client-ready narrative.",
+      "tavily_evidence": "\"Direct and adjacent competitors identified in the findings include PayPal, Block (Square), Adyen, Checkout.com…\" — an annotated list. Tavily repeatedly writes 'identified in the findings', 'research sources report', 'sources conflict' — transparent, but reads like notes, not a deliverable."
+    },
+    {
+      "key": "accuracy",
+      "label": "Accuracy & grounding",
+      "exa_rating": 5,
+      "tavily_rating": 5,
+      "verdict": "Parity",
+      "summary": "Every specific claim fact-checked from both held up against primary reporting; neither hallucinated. Both occasionally lean on stat-aggregators for secondary figures.",
+      "exa_evidence": "Verified true: Capital One's $5.15B acquisition of Brex ($2.75B cash + 10.6M shares), and Ramp's $750M round at $44B — dated just four days before the research run (excellent recency).",
+      "tavily_evidence": "Verified true: Stripe's ~$1B Metronome acquisition (Jan 2026) and the $106.7B Jan-2026 internal 409A — a precise valuation step Exa's brief skipped. Caught source conflicts ($140B vs $159B) honestly."
+    },
+    {
+      "key": "latency",
+      "label": "Latency",
+      "exa_rating": 4,
+      "tavily_rating": 3,
+      "verdict": "Exa edge",
+      "summary": "Exa completed the same six-section brief roughly 1.8x faster (one run each, identical inputs).",
+      "exa_evidence": "186 seconds, 43 sources.",
+      "tavily_evidence": "338 seconds, 15 sources."
+    }
+  ],
+  "comparables": {
+    "exa_seconds": 5,
+    "tavily_seconds": 256,
+    "tavily_returned": 7,
+    "exa": [
+      { "company": "Adyen", "founder": "Pieter van der Does & Arnout Schuijff", "valuation": "~$30B mkt cap (2026)", "description": "Single-platform global payments for enterprise merchants.", "kind": "Public · AMS:ADYEN", "url": "https://adyen.com" },
+      { "company": "PayPal", "founder": "Enrique Lores (CEO, 2026)", "valuation": "~$38B mkt cap (2026)", "description": "Online payments & checkout — owns Braintree and Venmo.", "kind": "Public · NASDAQ:PYPL", "url": "https://paypal.com" },
+      { "company": "Block", "founder": "Jack Dorsey", "valuation": "~$40B mkt cap (2026)", "description": "Square merchant tools and Cash App consumer payments.", "kind": "Public · NYSE:XYZ", "url": "https://block.xyz" },
+      { "company": "Checkout.com", "founder": "Guillaume Pousaz", "valuation": "$40B (2022) → $12B (2025)", "description": "Enterprise-focused online payment processing and acquiring.", "kind": "Private", "url": "https://checkout.com" },
+      { "company": "FIS", "founder": "Stephanie Ferris (CEO)", "valuation": "~$23B mkt cap (2026)", "description": "Banking and payments technology at global scale.", "kind": "Public · NYSE:FIS", "url": "https://fisglobal.com" },
+      { "company": "Global Payments", "founder": "Cameron Bready (CEO)", "valuation": "~$18B mkt cap (2026)", "description": "Merchant acquiring and payments tech (acquiring Worldpay).", "kind": "Public · NYSE:GPN", "url": "https://globalpayments.com" },
+      { "company": "Nuvei", "founder": "Philip Fayer", "valuation": "$6.3B take-private (2024, Advent)", "description": "Global payment technology across 200+ markets.", "kind": "Private", "url": "https://nuvei.com" },
+      { "company": "Rapyd", "founder": "Arik Shtilman", "valuation": "~$4.5B (2025, down from $10B '21)", "description": "Cross-border fintech-as-a-service: payments, payouts, wallets.", "kind": "Private", "url": "https://rapyd.net" }
+    ],
+    "tavily": [
+      { "company": "Adyen", "founder": "Pieter van der Does & Arnout Schuijff", "valuation": "$35.1B (2024)", "description": "Unified payments platform: gateway, acquiring, POS, issuing.", "kind": "Public" },
+      { "company": "Checkout.com", "founder": "Guillaume Pousaz", "valuation": "$40B (2022) → $12B (2025)", "description": "Global payments service provider for enterprise clients.", "kind": "Private" },
+      { "company": "PayPal", "founder": "Enrique Lores (CEO, 2026)", "valuation": "$38.6B (2026)", "description": "Digital payments platform; owns Braintree, Venmo, Xoom.", "kind": "Public" },
+      { "company": "Block (Square)", "founder": "Jack Dorsey", "valuation": "$42.5B (2024)", "description": "Payment processing, POS hardware, APIs, payroll.", "kind": "Public" },
+      { "company": "Marqeta", "founder": "Jason Gardner / Mike Milotich (CEO)", "valuation": "$1.64B (2026)", "description": "API-first card-issuing platform.", "kind": "Public" },
+      { "company": "Rapyd", "founder": "Arik Shtilman et al.", "valuation": "$10B (2024)*", "description": "API-first embedded-finance and global payments network.", "kind": "Private" },
+      { "company": "Payoneer", "founder": "Yuval Tal / John Caplan (CEO)", "valuation": "$1.68B (2026)", "description": "Cross-border payments and prepaid cards for global commerce.", "kind": "Public" }
+    ]
+  }
+}

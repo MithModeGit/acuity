@@ -29,3 +29,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local research/working artifacts (raw API captures + one-off scripts)
+/_*.mjs
+/_*.log
+/data/_*.json
