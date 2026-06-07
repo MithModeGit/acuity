@@ -4,12 +4,19 @@ interface CitationChipProps {
   citation: Citation;
 }
 
-/** Format an ISO-ish date string to "May 15, 2026". Returns null if unparseable. */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/**
+ * Format an ISO-ish date string to "May 15, 2026". Returns null if unparseable.
+ * Uses UTC getters so server and client render identically (a date-only string
+ * like "2025-02-04" is parsed as UTC; local-timezone formatting would shift the
+ * day and cause a Next.js hydration mismatch).
+ */
 function formatDate(raw?: string): string | null {
   if (!raw) return null;
   const parsed = new Date(raw);
   if (Number.isNaN(parsed.getTime())) return null;
-  return parsed.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return `${MONTHS[parsed.getUTCMonth()]} ${parsed.getUTCDate()}, ${parsed.getUTCFullYear()}`;
 }
 
 /**

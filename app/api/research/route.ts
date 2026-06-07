@@ -99,17 +99,34 @@ function processLiveSections(raw: ResearchSections): {
   return { sections, citations };
 }
 
+const VALID_CONTEXTS = new Set<ResearchContext>([
+  'investment_banking',
+  'private_equity',
+  'hedge_fund',
+  'management_consulting',
+]);
+
+function toContext(value: unknown): ResearchContext {
+  return typeof value === 'string' && VALID_CONTEXTS.has(value as ResearchContext)
+    ? (value as ResearchContext)
+    : 'investment_banking';
+}
+
 export async function POST(request: NextRequest) {
-  let body: { companyName?: string; context?: ResearchContext };
+  let body: { companyName?: unknown; context?: unknown } | null = null;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
+  }
+
   const { companyName, context } = body;
 
-  if (!companyName?.trim()) {
+  if (typeof companyName !== 'string' || !companyName.trim()) {
     return NextResponse.json({ error: 'Company name is required.' }, { status: 400 });
   }
 
@@ -126,7 +143,7 @@ export async function POST(request: NextRequest) {
   // ── Live Exa Deep Research path ────────────────────────────────────────
   try {
     const exa = getExa();
-    const instructions = buildInstructions(companyName.trim(), context ?? 'investment_banking');
+    const instructions = buildInstructions(companyName.trim(), toContext(context));
     const startedAt = Date.now();
 
     const created = await exa.research.create({
