@@ -31,7 +31,12 @@ function Card({
     </div>
   );
   return url ? (
-    <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', height: '100%' }}>
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ display: 'block', height: '100%', color: 'inherit', textDecoration: 'none' }}
+    >
       {inner}
     </a>
   ) : (
